@@ -1,43 +1,47 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import axios from "../api/axios";
-
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+// import axios from "../api/axios";
+// import useRefreshToken from "../hooks/useRefreshToken";
+// import useAuth from "../hooks/useAuth";
 
 const Users = () => {
+  console.log("\x1b[31mUsers Component");
   const [users, setUsers] = useState();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController(); // it is pure javascript method that cancel our axios request.
+  // const refresh = useRefreshToken();
+  // const { auth } = useAuth();
 
+  useEffect(() => {
+    const controller = new AbortController(); // it is pure javascript method that cancel our axios request.
     const getUsers = async () => {
       try {
+        console.log("Users  localhost:3500/users");
         const response = await axiosPrivate.get("/users", {
           signal: controller.signal,
         });
-        console.log(response.data);
-        isMounted && setUsers(response.data);
+        console.log(
+          "Users  localhost:3500/users  response.data : ",
+          response.data
+        );
+        setUsers(response.data);
       } catch (err) {
-        console.error(err);
+        console.log("Users  localhost:3500/users  error : ", err);
         navigate("/login", { state: { from: location }, replace: true });
+        // for saving the current location, "from: location" was used.
       }
     };
-
     getUsers();
-
-    return () => {
-      isMounted = false;
-      controller.abort(); // if unmounted, it will cancel the request.
-    };
+    // useEffect cleanup function
+    return () => controller.abort();
   }, []);
 
   return (
-    <article>
+    <article style={{ border: "1px solid green" }}>
       <h2>Users List</h2>
       {users?.length ? (
         <ul>
@@ -48,6 +52,8 @@ const Users = () => {
       ) : (
         <p>No users to display</p>
       )}
+      {/* <button onClick={() => refresh()}>Refresh</button> */}
+      {/* <br /> */}
     </article>
   );
 };

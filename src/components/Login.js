@@ -8,11 +8,14 @@ import * as S from "../styles/Login.styled";
 const LOGIN_URL = "/auth";
 
 const Login = () => {
-  const { auth, setAuth } = useAuth();
+  const { setAuth } = useAuth();
 
+  // for redirection
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+  // 리다이렉트되어 로그인페이지로 오게 되었는데, 로그인페이지로 오기 바로 전 페이지를
+  // 로케이션에서 저장하고 있다.
 
   const userRef = useRef();
   const errRef = useRef();
@@ -22,6 +25,10 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
+    console.log(
+      "\x1b[31mLogin -------------------------------------------------------- "
+    );
+
     userRef.current.focus();
 
     // console.log("auth : ", auth);
@@ -35,8 +42,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
+      console.log("Login  /auth");
       const response = await axios.post(
         LOGIN_URL,
         JSON.stringify({ user, pwd }),
@@ -45,13 +52,18 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(JSON.stringify(response?.data));
+      console.log(
+        "Login  /auth   response.data : ",
+        response.data
+        // JSON.stringify(response?.data)
+      );
       //console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
       const roles = response?.data?.roles;
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");
+      console.log("Login  /auth redirec to : ", from);
       navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {

@@ -4,6 +4,9 @@ import { useContext } from "react";
 import AuthContext from "../context/AuthProvider";
 
 const Home = () => {
+  console.log(
+    "\x1b[31mHome -------------------------------------------------------- "
+  );
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
 

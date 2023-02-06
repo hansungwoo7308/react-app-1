@@ -1,12 +1,18 @@
 import { Link } from "react-router-dom";
 
+import Users from "./Users";
+
 const Admin = () => {
+  console.log(
+    "\x1b[31mAdmin -------------------------------------------------------- "
+  );
   return (
     <section>
-      <div className="content">
+      <div className="content" style={{ border: "1px solid green" }}>
         <h1>Admins Page</h1>
         <br />
-        <p>You must have been assigned an Admin role.</p>
+        <Users />
+        <br />
         <div className="flexGrow">
           <Link to="/">Home</Link>
         </div>
